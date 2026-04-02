@@ -109,4 +109,6 @@ crm-ai-consultant/
 Папки: 755
 Файли: 644
 
-Зайдіть в адмін-панель: <script src="https://bilohash.com/ai/crm/index.php?site=ваш_site_id"></script>
+Зайдіть в адмін-панель: /admin/
+
+вставка виджета: <script src="https://bilohash.com/ai/crm/index.php?site=ваш_site_id"></script>
