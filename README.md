@@ -61,3 +61,14 @@ crm-ai-consultant/
 └── includes/
     ├── functions.php
     └── get-messages.php
+
+
+🚀 Встановлення
+
+Завантажте всі файли в папку /ai/crm/ на сервері
+Створіть папки sites/ та conversations/
+Встановіть права:
+Папки: 755
+Файли: 644
+
+Зайдіть в адмін-панель:
