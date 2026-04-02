@@ -44,7 +44,7 @@
 
 Зайдіть в адмін-панель: crm-ai-consultant/admin/login.php
 Увійдіть паролем 12345 (обов'язково змініть його!)
-<script src="https://bilohash.com/ai/crm/index.php?site=ваш_site_id"></script>
+
 
 Як використовувати
 
@@ -109,4 +109,4 @@ crm-ai-consultant/
 Папки: 755
 Файли: 644
 
-Зайдіть в адмін-панель:
+Зайдіть в адмін-панель: <script src="https://bilohash.com/ai/crm/index.php?site=ваш_site_id"></script>
