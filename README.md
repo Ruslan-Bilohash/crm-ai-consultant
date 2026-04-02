@@ -23,15 +23,15 @@
 
 ### 1. Адмін-панель — Список сайтів
 
-![Адмін-панель — Список сайтів](screenshots/admin-index.png)
+![Адмін-панель — Список сайтів](screen/admin-index.png)
 
 ### 2. Налаштування сайту
 
-![Налаштування сайту](screenshots/admin-site-settings.png)
+![Налаштування сайту](screen/admin-site-settings.png)
 
 ### 3. Чат-віджет на сайті
 
-![Чат-віджет](screenshots/chat-widget.png)
+![Чат-віджет](screen/chat-widget.png)
 
 ---
 🚀 Встановлення
