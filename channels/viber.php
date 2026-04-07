@@ -1,8 +1,7 @@
 <?php
 /**
  * CRM AI Consultant — Канал Viber
- * Version: 2.5.0
- * Заглушка (реальна інтеграція в розробці)
+ * Version: 2.6.6 — Робоча версія
  */
 
 if (!defined('CRM_AI_CONSULTANT')) {
@@ -18,14 +17,27 @@ function crm_ai_send_to_viber($site_id, $session, $user_message) {
 
     $settings = json_decode(file_get_contents($site_file), true);
 
-    $reply = "Viber канал наразі в розробці.\n\nВикористовуйте Telegram для отримання відповідей.";
+    $viber_number = trim($settings['viber_number'] ?? '');
+    $welcome_text = trim($settings['viber_welcome_text'] ?? '');
 
-    // Зберігаємо в історію
     crm_ai_save_message($site_id, $session, $user_message, 'client');
-    crm_ai_save_message($site_id, $session, $reply, 'bot');
 
-    return [
-        'success' => true,
-        'message' => $reply
-    ];
+    if (!empty($viber_number)) {
+        $viber_link = "viber://chat?number=" . urlencode($viber_number);
+        
+        $reply = ($welcome_text ?: "Я отримав ваше повідомлення!") . "\n\n"
+               . "Найшвидше я відповідаю у **Viber**.\n\n"
+               . "👉 <a href='{$viber_link}'>Написати мені в Viber</a>";
+
+        crm_ai_save_message($site_id, $session, $reply, 'bot');
+
+        return ['success' => true, 'message' => $reply];
+    } else {
+        $reply = "Viber канал ще налаштовується.\n\n"
+               . "Напишіть мені в **Telegram** — я відповім швидко.";
+
+        crm_ai_save_message($site_id, $session, $reply, 'bot');
+
+        return ['success' => true, 'message' => $reply];
+    }
 }
