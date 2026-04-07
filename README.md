@@ -20,14 +20,18 @@
 
 ## 📸 Скриншоти
 
+conversations.jpg
+conversations_screen.jpg
+telegram_message.jpg
+
 ### Адмін-панель — Список сайтів
-![Адмін-панель — Список сайтів](screen/admin-index.jpg)
+![Адмін-панель — Список сайтів](screen/admin.jpg)
 
 ### Налаштування сайту
 ![Налаштування сайту](screen/admin-site-settings.jpg)
 
 ### Чат-віджет на сайті
-![Чат-віджет на сайті](screen/chat-widget.png)
+![Чат-віджет на сайті](screen/wigets.png)
 
 ---
 
