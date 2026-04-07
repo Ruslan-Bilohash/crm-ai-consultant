@@ -1,44 +1,54 @@
 <?php
 /**
- * CRM AI Consultant — Читалка історії чату
- * Version: 2.5.5
- * Максимально прямий шлях
+ * CRM AI Consultant — Історія розмов
+ * Version: 2.6.9
  */
+
+define('CRM_AI_CONSULTANT', true);
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('log_errors', 1);
-ini_set('error_log', '/home/u762384583/domains/bilohash.com/public_html/ai/crm-ai-error.log');
+ini_set('error_log', dirname(__DIR__) . '/crm-ai-error.log');
 
-define('CRM_AI_CONSULTANT', true);
+// Правильні шляхи
+require_once dirname(__DIR__) . '/config.php';
+require_once dirname(__DIR__) . '/../includes/functions.php';
 
-// Прямий абсолютний шлях до functions.php
-require_once '/home/u762384583/domains/bilohash.com/public_html/ai/includes/functions.php';
-require_once '/home/u762384583/domains/bilohash.com/public_html/ai/config.php';
+$conversations_dir = dirname(__DIR__) . '/../conversations';
 
-session_start();
-if (!isset($_SESSION['crm_ai_admin_logged_in'])) {
-    header("Location: index.php");
-    exit;
+if (!is_dir($conversations_dir)) {
+    mkdir($conversations_dir, 0755, true);
 }
 
-$site_id = $_GET['site'] ?? '';
-if (empty($site_id)) {
-    die("Не вказано site_id");
-}
+// Завантаження розмов
+$conversations = [];
+$files = glob($conversations_dir . '/*.json');
 
-// Папка з історіями
-$conv_dir = '/home/u762384583/domains/bilohash.com/public_html/ai/conversations';
-$files = glob($conv_dir . '/' . $site_id . '_*.json');
-
-$all_conversations = [];
 foreach ($files as $file) {
-    $content = json_decode(file_get_contents($file), true) ?: [];
-    if (!empty($content)) {
-        $session_name = basename($file, '.json');
-        $all_conversations[$session_name] = $content;
+    $data = json_decode(file_get_contents($file), true);
+    if (is_array($data) && !empty($data)) {
+        $filename = basename($file);
+        if (preg_match('/^(.+?)_s_/', $filename, $matches)) {
+            $site_id = $matches[1];
+            $last_message = end($data);
+
+            $conversations[] = [
+                'file'          => $filename,
+                'site_id'       => $site_id,
+                'session'       => $filename,
+                'message_count' => count($data),
+                'last_time'     => $last_message['time'] ?? filemtime($file),
+                'last_message'  => $last_message['text'] ?? '',
+            ];
+        }
     }
 }
+
+// Сортування за часом (нові зверху)
+usort($conversations, function($a, $b) {
+    return $b['last_time'] <=> $a['last_time'];
+});
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +56,7 @@ foreach ($files as $file) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Історія чату — <?= htmlspecialchars($site_id) ?></title>
+    <title>Історія розмов — CRM AI Consultant</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -54,53 +64,54 @@ foreach ($files as $file) {
 
 <?php include 'navigation.php'; ?>
 
-<div class="max-w-6xl mx-auto p-8">
-    <div class="flex justify-between items-center mb-8">
-        <div>
-            <h1 class="text-4xl font-bold">Історія чату</h1>
-            <p class="text-zinc-400">Сайт: <strong class="font-mono"><?= htmlspecialchars($site_id) ?></strong></p>
-        </div>
-        <a href="index.php" class="px-6 py-3 bg-zinc-800 hover:bg-zinc-700 rounded-2xl text-sm">← Назад до сайтів</a>
-    </div>
+<div class="max-w-7xl mx-auto p-8">
+    <h1 class="text-4xl font-bold mb-2">Історія розмов</h1>
+    <p class="text-zinc-400 mb-8">Всі чати з відвідувачами</p>
 
-    <?php if (empty($all_conversations)): ?>
+    <?php if (empty($conversations)): ?>
         <div class="bg-zinc-900 rounded-3xl p-20 text-center">
-            <div class="text-6xl mb-6">📭</div>
-            <p class="text-2xl text-zinc-400">Історія повідомлень поки що порожня</p>
-            <p class="text-zinc-500 mt-4">Надішліть повідомлення в чаті на сайті, щоб з'явилася історія</p>
+            <div class="text-7xl mb-6">📭</div>
+            <h3 class="text-2xl font-medium">Поки немає розмов</h3>
+            <p class="text-zinc-400 mt-4">Коли клієнти напишуть у чат — історія з’явиться тут.</p>
         </div>
     <?php else: ?>
-        <?php foreach ($all_conversations as $session => $messages): ?>
-            <div class="mb-12 bg-zinc-900 rounded-3xl p-8">
-                <h3 class="text-xl font-medium mb-6 flex items-center gap-3 border-b border-zinc-700 pb-4">
-                    <i class="fas fa-clock text-sky-400"></i> 
-                    Сесія: <span class="font-mono text-sky-400"><?= htmlspecialchars($session) ?></span>
-                </h3>
-                
-                <div class="space-y-6 max-h-[620px] overflow-y-auto pr-6 custom-scroll">
-                    <?php foreach ($messages as $msg): ?>
-                        <div class="flex <?= $msg['sender'] === 'client' ? 'justify-end' : 'justify-start' ?>">
-                            <div class="<?= $msg['sender'] === 'client' 
-                                ? 'bg-sky-600 text-white' 
-                                : 'bg-zinc-700 text-zinc-100' ?> 
-                                px-6 py-4 rounded-3xl max-w-[78%]">
-                                <p class="whitespace-pre-wrap"><?= nl2br(htmlspecialchars($msg['content'])) ?></p>
-                                <p class="text-xs opacity-60 mt-3 text-right"><?= htmlspecialchars($msg['time'] ?? '') ?></p>
-                            </div>
-                        </div>
+        <div class="bg-zinc-900 rounded-3xl overflow-hidden">
+            <table class="w-full">
+                <thead class="bg-zinc-950">
+                    <tr>
+                        <th class="px-8 py-5 text-left">Сайт</th>
+                        <th class="px-8 py-5 text-left">Повідомлень</th>
+                        <th class="px-8 py-5 text-left">Останнє повідомлення</th>
+                        <th class="px-8 py-5 text-left">Час</th>
+                        <th class="w-40"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($conversations as $conv): ?>
+                    <tr class="border-t border-zinc-800 hover:bg-zinc-800">
+                        <td class="px-8 py-6 font-medium"><?= htmlspecialchars($conv['site_id']) ?></td>
+                        <td class="px-8 py-6"><?= $conv['message_count'] ?></td>
+                        <td class="px-8 py-6 text-sm text-zinc-300 truncate max-w-md">
+                            <?= htmlspecialchars(mb_substr($conv['last_message'], 0, 80)) ?>...
+                        </td>
+                        <td class="px-8 py-6 text-sm text-zinc-500">
+                            <?= date('d.m.Y H:i', $conv['last_time']) ?>
+                        </td>
+                        <td class="px-8 py-6 text-right">
+                            <a href="view-conversation.php?file=<?= urlencode($conv['file']) ?>" 
+                               class="bg-sky-600 hover:bg-sky-500 px-6 py-3 rounded-2xl text-sm inline-block">
+                                Переглянути
+                            </a>
+                        </td>
+                    </tr>
                     <?php endforeach; ?>
-                </div>
-            </div>
-        <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     <?php endif; ?>
 </div>
 
 <?php include 'footer.php'; ?>
-
-<style>
-.custom-scroll::-webkit-scrollbar { width: 6px; }
-.custom-scroll::-webkit-scrollbar-thumb { background: #64748b; border-radius: 3px; }
-</style>
 
 </body>
 </html>
