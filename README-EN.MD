@@ -74,6 +74,7 @@ WhatsApp,⚙️ In development,Manual mode for now
 
 Viber,⚙️ In development,Manual mode for now
 
+...bash
 crm-ai-consultant/
 ├── index.php # Main widget file (downloaded from the site)
 ├── config.php # Basic project settings
