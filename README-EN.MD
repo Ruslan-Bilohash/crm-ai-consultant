@@ -74,29 +74,28 @@ WhatsApp,⚙️ In development,Manual mode for now
 
 Viber,⚙️ In development,Manual mode for now
 
-```html
-<script src="https://bilohash.com/ai/crm/index.php?site=your_site_id"></script>
-
 crm-ai-consultant/
-├── index.php # Main widget file
-├── config.php
+├── index.php # Main widget file (downloaded from the site)
+├── config.php # Basic project settings
+├── version.php # Current system version (v2.7.0)
 ├── admin/
-│ ├── index.php # List of sites
-│ ├── sites.php # Site settings
-│ ├── conversations.php # Chat history
-│ ├── navigation.php
-│ └── footer.php
-├── sites/ # Site settings JSON files
-├── conversations/ # All conversation histories
-├── channels/
-│ ├── telegram.php
-│ ├── openai.php
-│ ├── grok.php
-│ ├── whatsapp.php
-│ └── viber.php
+│ ├── index.php # List of all sites
+│ ├── sites.php # Settings for one site (main file)
+│ ├── conversations.php # List of all conversations
+│ ├── get-conversation.php # AJAX loading of a conversation into a modal window
+│ ├── navigation.php # Admin panel header
+│ └── footer.php # Admin panel footer
+├── sites/ # JSON files with settings for each site
+├── conversations/ # JSON files with the history of all chats
+├── channels/ # Logic of each channel
+│ ├── telegram.php # Sending messages to Telegram
+│ ├── openai.php # Working with OpenAI (ChatGPT)
+│ ├── grok.php # Working with Grok (xAI)
+│ ├── whatsapp.php # WhatsApp logic
+│ └── viber.php # Viber logic
 ├── assets/
-│ ├── chat.js
-│ └── style.css
+│ ├── chat.js # Main widget JavaScript (button, window, message)
+│ └── style.css # Additional widget styles
 └── includes/
-├── functions.php
-└── get-messages.php
+├── functions.php # General functions (saving, processing messages, etc.)
+└── get-messages.php # Auxiliary file for receiving messages
