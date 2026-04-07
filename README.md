@@ -81,29 +81,31 @@ Viber,⚙️ В розробці,Поки що ручний режим
 
 ![підвал](screen/footer.jpg)
 
-```html
-<script src="https://bilohash.com/ai/crm/index.php?site=ваш_site_id"></script>
+## 📁 Структура проєкту
 
+```bash
 crm-ai-consultant/
-├── index.php                 # Головний файл віджету
-├── config.php
+├── index.php                  # Головний файл віджету (завантажується на сайті)
+├── config.php                 # Основні налаштування проєкту
+├── version.php                # Поточна версія системи (v2.7.0)
 ├── admin/
-│   ├── index.php             # Список сайтів
-│   ├── sites.php             # Налаштування сайту
-│   ├── conversations.php     # Історія чатів
-│   ├── navigation.php
-│   └── footer.php
-├── sites/                    # JSON-файли налаштувань сайтів
-├── conversations/            # Історії всіх розмов
-├── channels/
-│   ├── telegram.php
-│   ├── openai.php
-│   ├── grok.php
-│   ├── whatsapp.php
-│   └── viber.php
+│   ├── index.php              # Список всіх сайтів
+│   ├── sites.php              # Налаштування одного сайту (основний файл)
+│   ├── conversations.php      # Список усіх розмов
+│   ├── get-conversation.php   # AJAX завантаження розмови в модальне вікно
+│   ├── navigation.php         # Шапка адмін-панелі
+│   └── footer.php             # Футер адмін-панелі
+├── sites/                     # JSON-файли з налаштуваннями кожного сайту
+├── conversations/             # JSON-файли з історією всіх чатів
+├── channels/                  # Логіка кожного каналу
+│   ├── telegram.php           # Відправка повідомлень у Telegram
+│   ├── openai.php             # Робота з OpenAI (ChatGPT)
+│   ├── grok.php               # Робота з Grok (xAI)
+│   ├── whatsapp.php           # Логіка WhatsApp
+│   └── viber.php              # Логіка Viber
 ├── assets/
-│   ├── chat.js
-│   └── style.css
+│   ├── chat.js                # Головний JavaScript віджету (кнопка, вікно, повідомлення)
+│   └── style.css              # Додаткові стилі віджету
 └── includes/
-    ├── functions.php
-    └── get-messages.php
+    ├── functions.php          # Загальні функції (збереження, обробка повідомлень тощо)
+    └── get-messages.php       # Допоміжний файл для отримання повідомлень
