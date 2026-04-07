@@ -1,8 +1,7 @@
 <?php
 /**
  * CRM AI Consultant — Головна адмін-панель
- * Version: 2.5.5
- * Красивий список сайтів + копіювання коду + статус
+ * Version: 2.6.5 — Додано інформацію про канал і модель
  */
 
 error_reporting(E_ALL);
@@ -76,9 +75,6 @@ if (isset($_GET['check'])) {
     exit;
 }
 
-/**
- * Реальна перевірка наявності скрипту на сайті
- */
 function checkWidgetInstalled($domain, $site_id) {
     if (empty($domain)) return false;
     
@@ -89,7 +85,7 @@ function checkWidgetInstalled($domain, $site_id) {
     curl_setopt($ch, CURLOPT_TIMEOUT, 12);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'CRM-AI-Checker/2.5');
+    curl_setopt($ch, CURLOPT_USERAGENT, 'CRM-AI-Checker/2.6');
     
     $html = curl_exec($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -111,20 +107,9 @@ function checkWidgetInstalled($domain, $site_id) {
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        .site-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .site-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-        }
-        .copy-btn {
-            transition: all 0.3s ease;
-        }
-        .copy-btn.copied {
-            background-color: #10b981 !important;
-            color: white !important;
-        }
+        .site-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .site-card:hover { transform: translateY(-10px); box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25); }
+        .channel-badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 9999px; font-weight: 500; }
     </style>
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen">
@@ -160,10 +145,18 @@ function checkWidgetInstalled($domain, $site_id) {
                 $is_connected = $site['is_connected'] ?? false;
                 $last_check   = $site['last_check'] ?? null;
                 $channel      = strtoupper($site['default_channel'] ?? 'TELEGRAM');
+                
+                // Визначаємо модель
+                $model = '';
+                if ($channel === 'GROK' && !empty($site['ai_model'])) {
+                    $model = $site['ai_model'];
+                } elseif ($channel === 'OPENAI' && !empty($site['ai_model'])) {
+                    $model = $site['ai_model'];
+                }
             ?>
                 <div class="site-card bg-zinc-900 border <?= $is_enabled ? 'border-emerald-500' : 'border-red-700' ?> rounded-3xl overflow-hidden">
                     
-                    <!-- Header з градієнтом -->
+                    <!-- Header -->
                     <div class="h-2 bg-gradient-to-r from-sky-500 to-blue-500"></div>
                     
                     <div class="p-7">
@@ -181,8 +174,23 @@ function checkWidgetInstalled($domain, $site_id) {
                             <p class="text-zinc-400 text-sm mt-6 line-clamp-3"><?= htmlspecialchars($site['description']) ?></p>
                         <?php endif; ?>
 
+                        <!-- Інформація про канал і модель -->
+                        <div class="mt-6 flex flex-wrap gap-2">
+                            <span class="channel-badge <?= $channel === 'TELEGRAM' ? 'bg-blue-500/20 text-blue-400' : 
+                                                        ($channel === 'GROK' ? 'bg-orange-500/20 text-orange-400' : 
+                                                        ($channel === 'OPENAI' ? 'bg-purple-500/20 text-purple-400' : 'bg-zinc-700 text-zinc-300')) ?>">
+                                <?= $channel ?>
+                            </span>
+                            
+                            <?php if ($model): ?>
+                                <span class="channel-badge bg-zinc-700 text-zinc-300">
+                                    <?= htmlspecialchars($model) ?>
+                                </span>
+                            <?php endif; ?>
+                        </div>
+
                         <!-- Код для вставки -->
-                        <div class="mt-8 bg-black rounded-2xl p-5 text-xs font-mono text-emerald-300 border border-zinc-800 overflow-x-auto">
+                        <div class="mt-6 bg-black rounded-2xl p-5 text-xs font-mono text-emerald-300 border border-zinc-800 overflow-x-auto">
                             &lt;script src="https://bilohash.com/ai/crm/index.php?site=<?= htmlspecialchars($site['id']) ?>"&gt;&lt;/script&gt;
                         </div>
 
@@ -206,15 +214,15 @@ function checkWidgetInstalled($domain, $site_id) {
                     </div>
 
                     <!-- Нижні кнопки -->
-                    <div class="border-t border-zinc-800 grid grid-cols-2">
+                    <div class="border-t border-zinc-800 grid grid-cols-3">
                         <a href="sites.php?edit=<?= urlencode($site['id']) ?>" 
                            class="py-5 text-center hover:bg-zinc-800 transition font-medium flex items-center justify-center gap-2">
                             <i class="fas fa-edit"></i> Редагувати
                         </a>
-						<a href="conversations.php?site=<?= urlencode($site['id']) ?>" 
-                               class="py-4 text-center bg-violet-600 hover:bg-violet-500 rounded-2xl text-sm font-medium">
-                                📜 Історія
-                            </a>
+                        <a href="conversations.php?site=<?= urlencode($site['id']) ?>" 
+                           class="py-5 text-center hover:bg-zinc-800 transition font-medium flex items-center justify-center gap-2">
+                            <i class="fas fa-clock"></i> Історія
+                        </a>
                         <a href="?delete=<?= urlencode($site['id']) ?>" 
                            onclick="return confirm('Видалити сайт повністю?')"
                            class="py-5 text-center hover:bg-red-900/70 transition font-medium flex items-center justify-center gap-2 text-red-400">
