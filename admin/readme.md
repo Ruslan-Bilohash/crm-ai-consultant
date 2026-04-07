@@ -110,7 +110,7 @@
 ![Список сайтів](screen/admin-index.jpg)
 
 ### 2. Налаштування сайту
-![Налаштування сайту](screen/admin-site-settings.jpg)
+![Налаштування сайту](../screen/admin-site-settings.jpg)
 
 ### 3. Історія розмов
 ![Історія розмов](screen/conversations.jpg)
