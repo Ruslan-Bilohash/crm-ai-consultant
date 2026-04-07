@@ -1,6 +1,6 @@
 /**
  * CRM AI Consultant Chat Widget
- * Version: 2.6.9 — Футер всередині чату (як ти просив)
+ * Version: 2.6.9 — Футер всередині чату
  */
 
 (function () {
