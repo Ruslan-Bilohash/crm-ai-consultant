@@ -60,3 +60,26 @@ Viber,⚙️ В розробці,Поки що ручний режим
 ```html
 <script src="https://bilohash.com/ai/crm/index.php?site=ваш_site_id"></script>
 
+crm-ai-consultant/
+├── index.php                 # Головний файл віджету
+├── config.php
+├── admin/
+│   ├── index.php             # Список сайтів
+│   ├── sites.php             # Налаштування сайту
+│   ├── conversations.php     # Історія чатів
+│   ├── navigation.php
+│   └── footer.php
+├── sites/                    # JSON-файли налаштувань сайтів
+├── conversations/            # Історії всіх розмов
+├── channels/
+│   ├── telegram.php
+│   ├── openai.php
+│   ├── grok.php
+│   ├── whatsapp.php
+│   └── viber.php
+├── assets/
+│   ├── chat.js
+│   └── style.css
+└── includes/
+    ├── functions.php
+    └── get-messages.php
