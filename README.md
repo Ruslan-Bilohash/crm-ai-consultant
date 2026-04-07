@@ -79,6 +79,8 @@ WhatsApp,⚙️ В розробці,Поки що ручний режим
 
 Viber,⚙️ В розробці,Поки що ручний режим
 
+![підвал](screen/footer.jpg)
+
 ```html
 <script src="https://bilohash.com/ai/crm/index.php?site=ваш_site_id"></script>
 
