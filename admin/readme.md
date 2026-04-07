@@ -107,14 +107,14 @@
 ## 📸 Скриншоти Адмін-панелі
 
 ### 1. Список сайтів
-![Список сайтів](screen/admin-index.jpg)
+![Список сайтів](../screen/admin-index.jpg)
 
 ### 2. Налаштування сайту
 ![Налаштування сайту](../screen/admin-site-settings.jpg)
 
 ### 3. Історія розмов
-![Історія розмов](screen/conversations.jpg)
+![Історія розмов](../screen/conversations.jpg)
 
 ### 4. Перегляд окремої розмови
-![Перегляд розмови](screen/conversation-detail.jpg)
+![Перегляд розмови](../screen/conversation-detail.jpg)
 Напиши, що тобі потрібно.
