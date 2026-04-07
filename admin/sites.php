@@ -1,7 +1,7 @@
 <?php
 /**
  * CRM AI Consultant — Налаштування сайту
- * Version: 2.6.4 — Повернено перемикач Увімкнено/Вимкнено
+ * Version: 2.7.0 — Додано welcome_text, auto_open, max_history_messages + покращена адаптивність
  */
 
 define('CRM_AI_CONSULTANT', true);
@@ -24,7 +24,6 @@ $index = file_exists($index_file) ? json_decode(file_get_contents($index_file), 
 
 // ====================== ЗБЕРЕЖЕННЯ ======================
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_site_settings'])) {
-
     $domain = trim($_POST['domain'] ?? '');
     $site_id = strtolower(preg_replace('/[^a-z0-9]/', '_', $domain));
     $site_id = trim($site_id, '_') ?: 'site_' . time();
@@ -37,30 +36,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_site_settings'])
         'enable_chat'         => !empty($_POST['enable_chat']),
         'default_channel'     => $_POST['default_channel'] ?? 'telegram',
 
-        // Загальні налаштування
+        // Основні налаштування чату
         'chat_title'          => trim($_POST['chat_title'] ?? 'AI Consultant'),
         'chat_subtitle'       => trim($_POST['chat_subtitle'] ?? 'Швидка допомога'),
         'bot_icon'            => trim($_POST['bot_icon'] ?? '🤖'),
         'position'            => $_POST['position'] ?? 'right',
+
+        // Налаштування кольорів (залишено)
         'widget_color'        => $_POST['widget_color'] ?? '#22d3ee',
-        'welcome_text'        => trim($_POST['welcome_text'] ?? 'Добрий день! Як я можу допомогти вам?'),
+        'chat_bg_color'       => $_POST['chat_bg_color'] ?? '#0f172a',
+        'header_bg_color'     => $_POST['header_bg_color'] ?? '#1e2937',
+        'user_bubble_color'   => $_POST['user_bubble_color'] ?? '#22d3ee',
+        'bot_bubble_color'    => $_POST['bot_bubble_color'] ?? '#334155',
+
+        // Нові налаштування
+        'welcome_text'        => trim($_POST['welcome_text'] ?? 'Добрий день! Як я можу допомогти вам сьогодні?'),
         'auto_open'           => !empty($_POST['auto_open']),
         'auto_open_delay'     => (int)($_POST['auto_open_delay'] ?? 7000),
+        'max_history_messages'=> (int)($_POST['max_history_messages'] ?? 50),
 
-        // Telegram
+        // Канали
         'telegram_token'      => trim($_POST['telegram_token'] ?? ''),
         'telegram_chat_id'    => trim($_POST['telegram_chat_id'] ?? ''),
-        'telegram_parse_mode' => $_POST['telegram_parse_mode'] ?? 'MarkdownV2',
-
-        // OpenAI
         'openai_api_key'      => trim($_POST['openai_api_key'] ?? ''),
-        'openai_system_prompt'=> trim($_POST['openai_system_prompt'] ?? ''),
-
-        // Grok
         'grok_api_key'        => trim($_POST['grok_api_key'] ?? ''),
-        'grok_system_prompt'  => trim($_POST['grok_system_prompt'] ?? ''),
+        'whatsapp_number'     => trim($_POST['whatsapp_number'] ?? ''),
+        'viber_number'        => trim($_POST['viber_number'] ?? ''),
 
-        'ai_model'            => trim($_POST['ai_model'] ?? ''),
         'updated_at'          => date('Y-m-d H:i:s')
     ];
 
@@ -119,7 +121,6 @@ if (isset($_GET['edit'])) {
 <?php include 'navigation.php'; ?>
 
 <div class="max-w-5xl mx-auto p-8">
-
     <h1 class="text-4xl font-bold mb-2">Налаштування сайту</h1>
     <p class="text-zinc-400 mb-10">site_id: <strong><?= htmlspecialchars($edit_site['id'] ?? 'Новий сайт') ?></strong></p>
 
@@ -130,7 +131,7 @@ if (isset($_GET['edit'])) {
     <form method="POST" class="bg-zinc-900 rounded-3xl p-10">
         <input type="hidden" name="save_site_settings" value="1">
 
-        <!-- Перемикач Увімкнено / Вимкнено -->
+        <!-- Статус чату -->
         <div class="flex items-center justify-between bg-zinc-800 p-6 rounded-2xl mb-10">
             <span class="text-lg font-medium">Статус чату</span>
             <label class="relative inline-flex items-center cursor-pointer">
@@ -151,7 +152,7 @@ if (isset($_GET['edit'])) {
                 <input type="text" name="name" value="<?= htmlspecialchars($edit_site['name'] ?? '') ?>" required class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4">
             </div>
             <div>
-                <label class="block text-sm text-zinc-400 mb-2">Домен (example.com)</label>
+                <label class="block text-sm text-zinc-400 mb-2">Домен</label>
                 <input type="text" name="domain" value="<?= htmlspecialchars($edit_site['domain'] ?? '') ?>" required class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4">
             </div>
         </div>
@@ -161,7 +162,7 @@ if (isset($_GET['edit'])) {
             <textarea name="description" rows="3" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4"><?= htmlspecialchars($edit_site['description'] ?? '') ?></textarea>
         </div>
 
-        <!-- Вибір каналу -->
+        <!-- Канал за замовчуванням -->
         <div class="mt-12">
             <label class="block text-sm text-zinc-400 mb-4">Канал за замовчуванням</label>
             <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -178,10 +179,10 @@ if (isset($_GET['edit'])) {
                         default => ''
                     };
                     echo "
-                    <label class='channel-option flex flex-col items-center gap-3 p-6 bg-zinc-800 hover:bg-zinc-700 rounded-3xl cursor-pointer border-2 transition-all'>
-                        <i class='$icon text-5xl'></i>
-                        <span class='font-medium capitalize'>$ch</span>
-                        <input type='radio' name='default_channel' value='$ch' class='hidden' $checked>
+                    <label class='channel-option flex flex-col items-center gap-3 p-6 bg-zinc-800 hover:bg-zinc-700 rounded-3xl cursor-pointer border-2 transition-all' data-channel='{$ch}'>
+                        <i class='{$icon} text-5xl'></i>
+                        <span class='font-medium capitalize'>{$ch}</span>
+                        <input type='radio' name='default_channel' value='{$ch}' class='hidden' {$checked}>
                     </label>";
                 }
                 ?>
@@ -192,26 +193,99 @@ if (isset($_GET['edit'])) {
         include 'settings_telegram.php';
         include 'settings_openai.php';
         include 'settings_grok.php';
+        include 'settings_whatsapp.php';
+        include 'settings_viber.php';
         ?>
 
-        <!-- Дизайн чату -->
+        <!-- === НАЛАШТУВАННЯ ЧАТУ === -->
         <div class="mt-14 border-t border-zinc-700 pt-10">
-            <h3 class="text-xl font-medium mb-6">Зовнішній вигляд чату</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <h3 class="text-2xl font-semibold mb-8 text-white">Налаштування чату</h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+
+                <!-- Привітання -->
                 <div>
-                    <label class="block text-sm text-zinc-400 mb-2">Заголовок чату</label>
-                    <input type="text" name="chat_title" value="<?= htmlspecialchars($edit_site['chat_title'] ?? 'AI Consultant') ?>" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4">
+                    <label class="block text-sm text-zinc-400 mb-2">Привітання користувача (перше повідомлення)</label>
+                    <textarea name="welcome_text" rows="3"
+                              class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4"><?= htmlspecialchars($edit_site['welcome_text'] ?? 'Добрий день! Як я можу допомогти вам сьогодні?') ?></textarea>
+                    <p class="text-xs text-zinc-500 mt-2">З’являється автоматично при відкритті чату</p>
                 </div>
-                <div>
-                    <label class="block text-sm text-zinc-400 mb-2">Іконка бота</label>
-                    <input type="text" name="bot_icon" value="<?= htmlspecialchars($edit_site['bot_icon'] ?? '🤖') ?>" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4 text-3xl text-center">
+
+                <!-- Автовідкриття -->
+                <div class="space-y-6">
+                    <div>
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" name="auto_open" value="1"
+                                   <?= !empty($edit_site['auto_open']) ? 'checked' : '' ?> class="w-5 h-5">
+                            <span class="text-sm font-medium">Автоматично відкривати чат</span>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">Через скільки секунд відкривати чат</label>
+                        <div class="flex items-center gap-4">
+                            <input type="number" name="auto_open_delay" min="1000" max="30000" step="500"
+                                   value="<?= (int)($edit_site['auto_open_delay'] ?? 7000) ?>"
+                                   class="w-36 bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4 text-center">
+                            <span class="text-zinc-400">мілісекунд</span>
+                        </div>
+                        <p class="text-xs text-zinc-500 mt-1">Рекомендовано: 5000–10000 мс</p>
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-sm text-zinc-400 mb-2">Позиція віджету</label>
-                    <select name="position" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4">
-                        <option value="right" <?= ($edit_site['position'] ?? 'right') === 'right' ? 'selected' : '' ?>>Права</option>
-                        <option value="left" <?= ($edit_site['position'] ?? 'left') === 'left' ? 'selected' : '' ?>>Ліва</option>
-                    </select>
+
+                <!-- Максимальна кількість повідомлень -->
+                <div class="lg:col-span-2">
+                    <label class="block text-sm text-zinc-400 mb-2">Максимальна кількість повідомлень в історії</label>
+                    <input type="number" name="max_history_messages" min="10" max="200"
+                           value="<?= (int)($edit_site['max_history_messages'] ?? 50) ?>"
+                           class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4">
+                </div>
+            </div>
+
+            <!-- Розширений дизайн чату (кольори) -->
+            <div class="mt-16 pt-10 border-t border-zinc-700">
+                <h3 class="text-xl font-medium mb-6">Зовнішній вигляд чату (кольори)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">Заголовок чату</label>
+                        <input type="text" name="chat_title" value="<?= htmlspecialchars($edit_site['chat_title'] ?? 'AI Consultant') ?>" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">Підзаголовок</label>
+                        <input type="text" name="chat_subtitle" value="<?= htmlspecialchars($edit_site['chat_subtitle'] ?? 'Швидка допомога') ?>" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">Іконка бота</label>
+                        <input type="text" name="bot_icon" value="<?= htmlspecialchars($edit_site['bot_icon'] ?? '🤖') ?>" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4 text-3xl text-center">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">Колір віджету (кнопка)</label>
+                        <input type="color" name="widget_color" value="<?= htmlspecialchars($edit_site['widget_color'] ?? '#22d3ee') ?>" class="w-full h-12 bg-zinc-800 border border-zinc-700 rounded-2xl cursor-pointer">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">Колір фону чату</label>
+                        <input type="color" name="chat_bg_color" value="<?= htmlspecialchars($edit_site['chat_bg_color'] ?? '#0f172a') ?>" class="w-full h-12 bg-zinc-800 border border-zinc-700 rounded-2xl cursor-pointer">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">Колір хедера чату</label>
+                        <input type="color" name="header_bg_color" value="<?= htmlspecialchars($edit_site['header_bg_color'] ?? '#1e2937') ?>" class="w-full h-12 bg-zinc-800 border border-zinc-700 rounded-2xl cursor-pointer">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">Колір бульбашки користувача</label>
+                        <input type="color" name="user_bubble_color" value="<?= htmlspecialchars($edit_site['user_bubble_color'] ?? '#22d3ee') ?>" class="w-full h-12 bg-zinc-800 border border-zinc-700 rounded-2xl cursor-pointer">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">Колір бульбашки бота</label>
+                        <input type="color" name="bot_bubble_color" value="<?= htmlspecialchars($edit_site['bot_bubble_color'] ?? '#334155') ?>" class="w-full h-12 bg-zinc-800 border border-zinc-700 rounded-2xl cursor-pointer">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">Позиція віджету</label>
+                        <select name="position" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-4">
+                            <option value="right" <?= ($edit_site['position'] ?? 'right') === 'right' ? 'selected' : '' ?>>Права сторона</option>
+                            <option value="left" <?= ($edit_site['position'] ?? 'left') === 'left' ? 'selected' : '' ?>>Ліва сторона</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -228,7 +302,7 @@ if (isset($_GET['edit'])) {
 <?php include 'footer.php'; ?>
 
 <script>
-// Перемикання полів каналів
+// Перемикання каналів
 document.querySelectorAll('input[name="default_channel"]').forEach(radio => {
     radio.addEventListener('change', function() {
         document.querySelectorAll('.channel-settings').forEach(block => block.classList.add('hidden'));
