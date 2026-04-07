@@ -20,9 +20,6 @@
 
 ## 📸 Скриншоти
 
-conversations.jpg
-conversations_screen.jpg
-telegram_message.jpg
 
 ### Адмін-панель — Список сайтів
 ![Адмін-панель — Список сайтів](screen/admin.jpg)
@@ -31,10 +28,17 @@ telegram_message.jpg
 ![Налаштування сайту](screen/admin-site-settings.jpg)
 
 ### Чат-віджет на сайті
-![Чат-віджет на сайті](screen/wigets.png)
+![Чат-віджет на сайті](screen/wigets.jpg)
 
 ---
+### 3. Історія розмов
+![Історія розмов](screen/conversations.jpg)
 
+### 4. Перегляд окремої розмови
+![Перегляд розмови](screen/conversations_screen.jpg)
+
+### 5. Чат-віджет на сайті (приклад повідомлення в Telegram)
+![Чат-віджет на сайті](screen/telegram_message.jpg)
 ## 🚀 Встановлення
 
 1. Завантажте всі файли в папку `/ai/crm/` на вашому сервері
