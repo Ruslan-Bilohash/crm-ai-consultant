@@ -58,3 +58,49 @@
 ---
 
 ## Структура проєкту
+
+---
+
+## Підключення віджету на сайт
+
+Додайте цей код перед закриваючим тегом `</body>`:
+
+```html
+<script src="https://bilohash.com/ai/crm/index.php?site=ВАШ_SITE_ID"></script>
+
+crm-ai-consultant/
+├── README.md
+├── CHANGELOG.md
+├── documentation.html
+├── config.php                  # Конфігурація бази даних + константи
+├── version.php                 # Версія проєкту
+├── index.php                   # Головний файл віджету (для вставки на сайти)
+├── reset_admin.php             # Одноразовий файл для створення адміна (потім видалити!)
+├── crm-ai-error.log            # Лог помилок
+│
+├── admin/                      # Адмін-панель
+│   ├── index.php               # Головна сторінка — список всіх сайтів
+│   ├── sites.php               # Налаштування одного сайту (дизайн + канали + промпти)
+│   ├── conversations.php       # Історія всіх чатів
+│   ├── admins.php              # Управління адміністратором (зміна пароля)
+│   ├── login.php               # Сторінка входу
+│   ├── logout.php              # Вихід з системи
+│   ├── navigation.php          # Шапка адмін-панелі
+│   └── footer.php              # Футер адмін-панелі
+│
+├── includes/                   # Основні функції
+│   └── functions.php           # Головні функції (робота з БД, обробка повідомлень тощо)
+│
+├── channels/                   # Канали зв'язку
+│   ├── telegram.php
+│   ├── grok.php
+│   ├── openai.php
+│   ├── whatsapp.php
+│   └── viber.php
+│
+├── assets/                     # Фронтенд файли віджету
+│   ├── chat.js                 # Основний скрипт чату
+│   └── style.css               # Стилі чату
+│
+└── sql/                        # (рекомендую створити цю папку)
+    └── schema.sql              # SQL для створення таблиць (admins, sites, conversations)
