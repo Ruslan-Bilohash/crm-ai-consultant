@@ -1,6 +1,12 @@
 # CRM AI Consultant 4.1
 
 **Самохостинговий мультиканальний AI-чат скрипт на PHP + MySQL**
+
+
+Потужний AI-віджет з підтримкою **Grok (xAI), OpenAI, Telegram, WhatsApp та Viber**. Повний контроль, швидкі відповіді та індивідуальний дизайн.
+
+![CRM AI Consultant](screen/wigets.jpg)
+
 ## 🚀 Стек технологій
 
 <p align="center">
@@ -19,26 +25,6 @@
   <img src="https://img.shields.io/badge/WhatsApp-25D366?logo=whatsapp&logoColor=white&style=for-the-badge" alt="WhatsApp">
   <img src="https://img.shields.io/badge/Viber-7360F2?logo=viber&logoColor=white&style=for-the-badge" alt="Viber">
 </p>
-## 🛠 Технології
-
-<div align="center">
-
-![PHP](https://img.shields.io/badge/PHP-777BB4?logo=php&logoColor=white&style=for-the-badge)
-![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white&style=for-the-badge)
-![JSON](https://img.shields.io/badge/JSON-000000?logo=json&logoColor=white&style=for-the-badge)
-
-![Grok](https://img.shields.io/badge/Grok-xAI-000000?logo=x&logoColor=white&style=for-the-badge)
-![OpenAI](https://img.shields.io/badge/OpenAI-10A37F?logo=openai&logoColor=white&style=for-the-badge)
-
-![Telegram](https://img.shields.io/badge/Telegram-26A5E4?logo=telegram&logoColor=white&style=for-the-badge)
-![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?logo=whatsapp&logoColor=white&style=for-the-badge)
-![Viber](https://img.shields.io/badge/Viber-7360F2?logo=viber&logoColor=white&style=for-the-badge)
-
-</div>
-Потужний AI-віджет з підтримкою **Grok (xAI), OpenAI, Telegram, WhatsApp та Viber**. Повний контроль, швидкі відповіді та індивідуальний дизайн.
-
-![CRM AI Consultant](screen/wigets.jpg)
-
 ## ✨ Основні можливості
 
 - 5 каналів в одному скрипті
