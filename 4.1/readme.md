@@ -4,7 +4,7 @@
 
 Потужний AI-віджет з підтримкою **Grok (xAI), OpenAI, Telegram, WhatsApp та Viber**. Повний контроль, індивідуальний дизайн і швидкі відповіді.
 
-![CRM AI Consultant](https://bilohash.com/ai/crm/assets/og-image.jpg)
+![Мої сайти](screen/wigets.jpg)
 
 ## ✨ Основні можливості
 
@@ -19,7 +19,6 @@
 ## 📸 Скріншоти
 
 ### Адмін-панель
-![Мої сайти](screen/wigets.jpg)
 ![Налаштування сайту](screen/admin_site.jpg)
 ![Модель OpenAI](screen/model_settings.jpg)
 
