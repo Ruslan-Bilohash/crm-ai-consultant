@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM AI Consultant — Changelog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; }
+        .version-header { 
+            background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+        }
+        .changelog-item {
+            transition: all 0.3s ease;
+        }
+        .changelog-item:hover {
+            transform: translateX(8px);
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-100">
+
+<div class="max-w-4xl mx-auto p-6 lg:p-12">
+
+    <div class="text-center mb-16">
+        <div class="inline-flex items-center gap-4 mb-6">
+            <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-sky-500 rounded-2xl flex items-center justify-center text-5xl">📜</div>
+        </div>
+        <h1 class="text-5xl font-bold tracking-tight">Changelog</h1>
+        <p class="text-xl text-zinc-400 mt-2">Історія оновлень CRM AI Consultant</p>
+    </div>
+
+    <!-- Версія 4.1 -->
+    <div class="mb-16">
+        <div class="version-header text-white rounded-3xl p-8 mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="px-4 py-1 bg-white/20 text-xs font-mono rounded-full">2026-04-25</span>
+                    <h2 class="text-4xl font-bold mt-4">Version 4.1</h2>
+                </div>
+                <div class="text-right">
+                    <span class="text-emerald-300 text-sm">Major Performance Update</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-8">
+            <div class="changelog-item bg-zinc-900 rounded-3xl p-8">
+                <div class="flex gap-4">
+                    <div class="text-emerald-400 text-2xl">⚡</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-semibold text-emerald-400">Значне прискорення відповідей AI</h3>
+                        <ul class="mt-4 space-y-3 text-zinc-300">
+                            <li>• Системний промпт тепер зберігається у файл (<code>sites/{site_id}_prompt.txt</code>)</li>
+                            <li>• Налаштування сайту кешуються у JSON-файл</li>
+                            <li>• Значно зменшено кількість запитів до бази даних під час чату</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="changelog-item bg-zinc-900 rounded-3xl p-8">
+                <div class="flex gap-4">
+                    <div class="text-sky-400 text-2xl">📨</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-semibold text-sky-400">Дублікація повідомлень у Telegram</h3>
+                        <p class="mt-3 text-zinc-300">
+                            Новий параметр <strong>«Надсилати також у Telegram»</strong> — тепер ви можете отримувати всі повідомлення в Telegram, навіть якщо основний канал Grok або OpenAI.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="changelog-item bg-zinc-900 rounded-3xl p-8">
+                <div class="flex gap-4">
+                    <div class="text-amber-400 text-2xl">🔧</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-semibold">Оптимізація каналів</h3>
+                        <ul class="mt-4 space-y-2 text-zinc-300">
+                            <li>• Покращений Grok handler</li>
+                            <li>• Оптимізований OpenAI handler</li>
+                            <li>• Зменшені таймаути та payload</li>
+                            <li>• Краща обробка помилок</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="changelog-item bg-zinc-900 rounded-3xl p-8">
+                <div class="flex gap-4">
+                    <div class="text-purple-400 text-2xl">📁</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-semibold">Нова структура файлів</h3>
+                        <p class="mt-3 text-zinc-300">
+                            Папка <code>sites/cache/</code> для кешування налаштувань + файловий промпт для максимальної швидкості.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Версія 4.0 -->
+    <div class="mb-16 opacity-75">
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+            <span class="text-zinc-500">Version 4.0</span>
+            <span class="text-xs px-3 py-1 bg-zinc-800 rounded-full">2026-04-21</span>
+        </h2>
+        <ul class="space-y-3 text-zinc-400">
+            <li>• Повний перехід на MySQL</li>
+            <li>• Новий сучасний дизайн адмін-панелі</li>
+            <li>• Підтримка Grok, OpenAI, Telegram, WhatsApp, Viber</li>
+            <li>• Індивідуальний дизайн для кожного сайту</li>
+        </ul>
+    </div>
+
+    <div class="text-center text-zinc-500 text-sm mt-20">
+        CRM AI Consultant © 2026 Ruslan Bilohash<br>
+        <a href="documentation.html" class="text-sky-400 hover:underline">← Повернутися до документації</a>
+    </div>
+
+</div>
+
+</body>
+</html>

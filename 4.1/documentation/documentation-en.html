@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM AI Consultant — Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; }
+        .toc a { transition: all 0.2s; }
+        .toc a:hover { color: #22d3ee; padding-left: 10px; }
+        .section { scroll-margin-top: 80px; }
+        .new-feature { background: #10b981; color: white; font-size: 0.75rem; padding: 2px 8px; border-radius: 9999px; }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-100">
+
+<div class="max-w-5xl mx-auto p-6 lg:p-12">
+
+    <!-- Header -->
+    <div class="text-center mb-16">
+        <div class="inline-flex items-center gap-5 mb-6">
+            <div class="w-20 h-20 bg-gradient-to-br from-sky-500 to-blue-600 rounded-3xl flex items-center justify-center text-6xl shadow-2xl">🤖</div>
+        </div>
+        <h1 class="text-5xl font-bold tracking-tight">CRM AI Consultant</h1>
+        <p class="text-xl text-zinc-400 mt-2">Version <strong>4.1</strong> • Documentation</p>
+        <p class="max-w-2xl mx-auto mt-6 text-zinc-300">
+            A universal AI chat system with multi-channel support and complete individual customization for each website.
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+
+        <!-- Table of Contents -->
+        <div class="lg:col-span-4">
+            <div class="sticky top-8 bg-zinc-900 rounded-3xl p-8">
+                <h3 class="font-semibold text-lg mb-6 flex items-center gap-2">
+                    <i class="fas fa-list"></i> Contents
+                </h3>
+                <div class="toc space-y-3 text-sm">
+                    <a href="#intro" class="block">1. Introduction</a>
+                    <a href="#whatsnew" class="block text-emerald-400 font-medium">★ What's New in v4.1</a>
+                    <a href="#structure" class="block">2. Project Structure</a>
+                    <a href="#installation" class="block">3. Installation</a>
+                    <a href="#usage" class="block">4. How to Use</a>
+                    <a href="#sites" class="block">5. Managing Websites</a>
+                    <a href="#channels" class="block">6. Communication Channels</a>
+                    <a href="#design" class="block">7. Chat Design</a>
+                    <a href="#api" class="block">8. API Keys</a>
+                    <a href="#troubleshooting" class="block">9. Troubleshooting</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="lg:col-span-8 space-y-16">
+
+            <section id="intro" class="section">
+                <h2 class="text-3xl font-bold mb-6">1. Introduction</h2>
+                <p class="text-zinc-300 leading-relaxed">
+                    <strong>CRM AI Consultant</strong> is a universal two-way AI chat system 
+                    that allows you to connect an intelligent widget to any website (WordPress, Tilda, pure HTML, Laravel, etc.).
+                </p>
+                <p class="text-zinc-300 mt-4">
+                    Each website has completely individual settings: chat design, communication channel, 
+                    AI model, API keys, and its own conversation history.
+                </p>
+                <div class="mt-6 inline-block bg-zinc-900 px-6 py-3 rounded-2xl text-sm">
+                    Supported channels: <strong>Telegram, OpenAI (GPT), Grok (xAI), WhatsApp, Viber</strong>
+                </div>
+            </section>
+
+            <!-- What's New -->
+            <section id="whatsnew" class="section">
+                <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                    <span class="new-feature">NEW</span> 
+                    What's New in Version 4.1
+                </h2>
+                <ul class="space-y-4 text-zinc-300">
+                    <li><strong>⚡ Prompt saved to file</strong> — AI responses are now much faster</li>
+                    <li><strong>Settings caching</strong> — fewer database queries</li>
+                    <li><strong>Additional sending to Telegram</strong> — even when using Grok or OpenAI</li>
+                    <li><strong>Optimized Grok and OpenAI channels</strong> — reduced response time</li>
+                    <li><strong>Improved prompt storage structure</strong> — main prompt in <code>system_prompt</code> field</li>
+                    <li><strong>New checkbox</strong> "Send to Telegram as well" in site settings</li>
+                    <li><strong>Stability and security</strong> — improved error handling and caching</li>
+                    <li>Overall chat speed optimization</li>
+                </ul>
+                <p class="mt-6 text-emerald-400 text-sm">
+                    The bot now responds noticeably faster, especially with Grok and OpenAI.
+                </p>
+            </section>
+
+                        <section id="structure" class="section">
+                <h2 class="text-3xl font-bold mb-6">2. Project Structure</h2>
+                <pre class="bg-black text-emerald-300 p-8 rounded-3xl overflow-x-auto text-sm leading-relaxed">
+crm-ai-consultant/
+├── index.php                 ← Main widget file (serves JS config + handles all AJAX)
+├── config.php                ← Main system configuration (database, constants)
+├── version.php               ← Current version
+├── documentation.html        ← Full documentation (this file)
+├── changelog.html            ← Version history
+├── crm-ai-error.log          ← Error log (auto-created)
+│
+├── admin/
+│   ├── index.php             ← Main admin dashboard (list of all sites)
+│   ├── sites.php             ← Edit site settings
+│   ├── conversations.php     ← View all chat history
+│   ├── login.php             ← Admin login
+│   ├── navigation.php        ← Admin header
+│   ├── footer.php            ← Admin footer
+│   ├── icon.php              ← Bot icon picker modal
+│   └── settings_*.php        ← Channel settings (telegram, grok, openai, etc.)
+│
+├── sites/                    ← Individual site settings + prompt files
+│   └── cache/                ← Cached site settings (for speed)
+│
+├── conversations/            ← All chat histories stored in MySQL
+│
+├── channels/
+│   ├── telegram.php          ← Telegram handler
+│   ├── grok.php              ← Grok (xAI) handler
+│   ├── openai.php            ← OpenAI GPT handler
+│   ├── whatsapp.php          ← WhatsApp handler
+│   └── viber.php             ← Viber handler
+│
+├── assets/
+│   ├── chat.js               ← Main chat widget script
+│   └── style.css             ← Chat widget styles
+│
+└── includes/
+    ├── functions.php         ← Core functions (save messages, routing, caching)
+    ├── get-messages.php      ← AJAX: get conversation messages
+    └── get-conversation.php  ← AJAX: full conversation view (for admin)
+                </pre>
+            </section>
+
+            <section id="installation" class="section">
+                <h2 class="text-3xl font-bold mb-6">3. Installation</h2>
+                <ol class="list-decimal pl-6 space-y-6 text-zinc-300">
+                    <li>Upload all files to the <code>/ai/crm/</code> folder on your server</li>
+                    <li>Create folders <code>sites/</code> and <code>sites/cache/</code></li>
+                    <li>Set write permissions: <strong>755</strong> for folders, <strong>644</strong> for files</li>
+                    <li>Go to admin panel: <code>https://bilohash.com/ai/crm/admin/</code></li>
+                    <li>Login with password <code>12345</code> (change it immediately!)</li>
+                </ol>
+            </section>
+
+            <section id="usage" class="section">
+                <h2 class="text-3xl font-bold mb-6">4. How to Use</h2>
+                <div class="bg-zinc-900 p-8 rounded-3xl space-y-4">
+                    <p><strong>1.</strong> Add a new website in the admin panel</p>
+                    <p><strong>2.</strong> Fill in the settings (especially the system prompt!)</p>
+                    <p><strong>3.</strong> Copy the generated code</p>
+                    <p><strong>4.</strong> Paste it on your website before the <code>&lt;/body&gt;</code> tag</p>
+                    <p><strong>5.</strong> Click the "Check" button in the admin panel</p>
+                </div>
+            </section>
+
+            <section id="sites" class="section">
+                <h2 class="text-3xl font-bold mb-6">5. Managing Websites</h2>
+                <p class="text-zinc-300">
+                    Each website has its own unique <code>site_id</code>, generated automatically from the domain.<br>
+                    Example: <code>mapsme_no</code>, <code>bilohash_com</code>
+                </p>
+                <div class="mt-6 bg-black rounded-2xl p-6 font-mono text-emerald-300 text-sm">
+                    &lt;script src="https://bilohash.com/ai/crm/index.php?site=YOUR_SITE_ID"&gt;&lt;/script&gt;
+                </div>
+            </section>
+
+            <section id="channels" class="section">
+                <h2 class="text-3xl font-bold mb-6">6. Communication Channels</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-zinc-900 p-6 rounded-3xl">
+                        <h4 class="font-semibold text-lg mb-3 flex items-center gap-2">
+                            <i class="fab fa-telegram text-blue-400"></i> Telegram
+                        </h4>
+                        <p class="text-zinc-400">The fastest and most stable channel. Messages arrive in your Telegram.</p>
+                    </div>
+                    <div class="bg-zinc-900 p-6 rounded-3xl">
+                        <h4 class="font-semibold text-lg mb-3 flex items-center gap-2">
+                            <i class="fas fa-brain text-purple-400"></i> OpenAI / Grok
+                        </h4>
+                        <p class="text-zinc-400">Automatic replies powered by artificial intelligence.</p>
+                    </div>
+                    <div class="bg-zinc-900 p-6 rounded-3xl">
+                        <h4 class="font-semibold text-lg mb-3 flex items-center gap-2">
+                            <i class="fab fa-whatsapp text-green-400"></i> WhatsApp
+                        </h4>
+                        <p class="text-zinc-400">Business API support (in development).</p>
+                    </div>
+                    <div class="bg-zinc-900 p-6 rounded-3xl">
+                        <h4 class="font-semibold text-lg mb-3 flex items-center gap-2">
+                            <i class="fab fa-viber text-purple-500"></i> Viber
+                        </h4>
+                        <p class="text-zinc-400">Business API support (in development).</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="design" class="section">
+                <h2 class="text-3xl font-bold mb-6">7. Chat Design</h2>
+                <p class="text-zinc-300">
+                    Each website can have a fully custom design: colors, bot icon, title, subtitle, 
+                    widget position (left/right), greeting text, and auto-open settings.
+                </p>
+            </section>
+
+            <section id="api" class="section">
+                <h2 class="text-3xl font-bold mb-6">8. API Keys</h2>
+                <ul class="space-y-4 text-zinc-300">
+                    <li><strong>Telegram</strong> — Bot Token + Chat ID</li>
+                    <li><strong>OpenAI</strong> — API Key (<a href="https://platform.openai.com/api-keys" target="_blank" class="text-sky-400">get here</a>)</li>
+                    <li><strong>Grok (xAI)</strong> — API Key (<a href="https://x.ai/api" target="_blank" class="text-sky-400">get here</a>)</li>
+                </ul>
+            </section>
+
+            <section id="troubleshooting" class="section">
+                <h2 class="text-3xl font-bold mb-6">9. Troubleshooting</h2>
+                <div class="bg-zinc-900 p-8 rounded-3xl space-y-6">
+                    <div>
+                        <h4 class="font-medium text-red-400">White screen</h4>
+                        <p class="text-zinc-400">Check the file <code>crm-ai-error.log</code> in the /ai/ folder</p>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-red-400">Chat doesn't appear</h4>
+                        <p class="text-zinc-400">Make sure the script is placed before <code>&lt;/body&gt;</code> and the site_id is correct.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-red-400">"Connection error"</h4>
+                        <p class="text-zinc-400">Check that the channel is configured correctly and the API keys are valid.</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center text-zinc-500 text-sm mt-20 pt-10 border-t border-zinc-800">
+        CRM AI Consultant © 2026 Ruslan Bilohash<br>
+        <a href="https://github.com/Ruslan-Bilohash/crm-ai-consultant" target="_blank" class="text-sky-400 hover:underline">GitHub</a> • 
+        <a href="https://bilohash.com/" target="_blank" class="text-sky-400 hover:underline">bilohash.com</a>
+    </div>
+
+</div>
+
+</body>
+</html>
